@@ -9,31 +9,14 @@ const agentId = process.env.DIALOGFLOW_AGENT_ID;
 const environment = 'Draft'; // or your specific environment ID
 const languageCode = 'es';
 
-// Decode the base64 encoded service account JSON from environment variable
-const keyFileBase64 = process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64;
-
-if (!keyFileBase64) {
-  console.error('Base64 encoded service account key is not set.');
-  process.exit(1);
-}
-
-const decodedKey = Buffer.from(keyFileBase64, 'base64').toString('utf8');
-
-// Parse the decoded string to a JSON object
-let credentials;
-try {
-  credentials = JSON.parse(decodedKey);
-} catch (error) {
-  console.error('Failed to parse service account key:', error);
-  process.exit(1);
-}
+const credentials = {
+  private_key: process.env.DIALOGFLOW_PRIVATE_KEY,
+  client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+};
 
 const client = new SessionsClient({
   apiEndpoint: `${location}-dialogflow.googleapis.com`,
-  credentials: {
-    private_key: credentials.private_key,
-    client_email: credentials.client_email,
-  },
+  credentials: credentials,
 });
 
 export async function sendToDialogflowCX(message) {
