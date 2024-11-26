@@ -15,6 +15,7 @@ const client = new SessionsClient({
 
 export async function sendToDialogflowCX(message) {
   const sessionId = Math.random().toString(36).substring(7);
+  console.log('Sending message to Dialogflow CX with session ID:', sessionId);
 
   // Construct the session path manually for CX
   const sessionPath = `projects/${projectId}/locations/${location}/agents/${agentId}/environments/${environment}/sessions/${sessionId}`;
@@ -29,6 +30,8 @@ export async function sendToDialogflowCX(message) {
     },
   };
 
+  console.log('Request:', JSON.stringify(request, null, 2));
+
   try {
     const [response] = await client.detectIntent(request);
     if (response.queryResult && response.queryResult.responseMessages) {
@@ -39,7 +42,9 @@ export async function sendToDialogflowCX(message) {
     }
     return "Sorry, I couldn't understand that. Could you try again?";
   } catch (error) {
-    console.error('Error communicating with Dialogflow CX:', error);
+
+    console.error('Error communicating with Dialogflow CX:', JSON.stringify(error, null, 2));
     return "Sorry, there was an error processing your request.";
+    
   }
 }
