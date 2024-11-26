@@ -19,6 +19,7 @@ const client = new SessionsClient({
   credentials: credentials,
 });
 
+
 export async function sendToDialogflowCX(message) {
   const sessionId = Math.random().toString(36).substring(7);
   const sessionPath = `projects/${projectId}/locations/${location}/agents/${agentId}/environments/${environment}/sessions/${sessionId}`;
