@@ -68,8 +68,26 @@ io.on('connection', (socket) => {
   });
 });
 
+function listRoutes(app) {
+  console.log('Registered routes:');
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      const methods = Object.keys(middleware.route.methods).join(', ').toUpperCase();
+      console.log(`${methods} -> ${middleware.route.path}`);
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          const methods = Object.keys(handler.route.methods).join(', ').toUpperCase();
+          console.log(`${methods} -> /payments${handler.route.path}`);
+        }
+      });
+    }
+  });
+}
+
 
 // Start the server
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  listRoutes(app);
 });

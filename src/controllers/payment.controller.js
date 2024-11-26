@@ -16,10 +16,10 @@ export const createOrder = async (req, res)=>{
             brand_name: "eduinsight",
             landing_page: "NO_PREFERENCE",
             user_action: "PAY_NOW",
-            return_url: `${HOST}/capture-order`,
-            cancel_url: `${HOST}/cancel-order`,
-        }
-    }
+            return_url: `${HOST}/payments/capture-order`,
+            cancel_url: `${HOST}/payments/cancel-order`,
+          },
+    };
 
     const params = new URLSearchParams();
     params.append('grant_type','client_credentials');
@@ -53,6 +53,6 @@ export const captureOrder = async (req, res)=> {
 
     console.log(response.data)
 
-    return res.redirect('played')
+    return res.redirect('/payed.html')
 }
 export const cancelOrder = (req, res)=> res.redirect('/')
