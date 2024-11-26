@@ -14,15 +14,27 @@ import dotenv from 'dotenv';
 // Environment Variables
 dotenv.config();
 
-const credentialsPath = path.resolve('firebase-credentials.json');
-if (!fs.existsSync(credentialsPath)) {
-  console.error(`Firebase credentials file not found at: ${credentialsPath}`);
+const firebaseCredentialsBase64 = process.env.FIREBASE_CREDENTIALS_BASE64;
+
+// Check if credentials are available
+if (!firebaseCredentialsBase64) {
+  console.error('Firebase credentials are missing in the .env file');
   process.exit(1);
 }
 
+// Decode the base64 string to get the JSON data
+const firebaseCredentials = JSON.parse(Buffer.from(firebaseCredentialsBase64, 'base64').toString('utf-8'));
+
+
+// const credentialsPath = path.resolve('firebase-credentials.json');
+// if (!fs.existsSync(credentialsPath)) {
+//   console.error(`Firebase credentials file not found at: ${credentialsPath}`);
+//   process.exit(1);
+// }
+
 // Initialize Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.cert(credentialsPath)
+  credential: admin.credential.cert(firebaseCredentials)
 });
 
 const app = express()
