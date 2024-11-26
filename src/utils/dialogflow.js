@@ -14,13 +14,11 @@ const credentials = {
   client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
 };
 
-import pkg from '@grpc/grpc-js';
-const { grpc } = pkg;
 
 const client = new SessionsClient({
   credentials: credentials,
   apiEndpoint: 'dialogflow.googleapis.com',
-  transport: grpc.ClientDuplexStream, // Force insecure channel
+  apiEndpoint: 'dialogflow.googleapis.com',
   sslTargetNameOverride: 'dialogflow.googleapis.com',
 });
 
