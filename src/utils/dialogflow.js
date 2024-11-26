@@ -9,15 +9,35 @@ const agentId = process.env.DIALOGFLOW_AGENT_ID;
 const environment = 'Draft'; // or your specific environment ID
 const languageCode = 'es';
 
+// Decode the base64 encoded service account JSON from environment variable
+const keyFileBase64 = process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64;
+
+if (!keyFileBase64) {
+  console.error('Base64 encoded service account key is not set.');
+  process.exit(1);
+}
+
+const decodedKey = Buffer.from(keyFileBase64, 'base64').toString('utf8');
+
+// Parse the decoded string to a JSON object
+let credentials;
+try {
+  credentials = JSON.parse(decodedKey);
+} catch (error) {
+  console.error('Failed to parse service account key:', error);
+  process.exit(1);
+}
+
 const client = new SessionsClient({
   apiEndpoint: `${location}-dialogflow.googleapis.com`,
+  credentials: {
+    private_key: credentials.private_key,
+    client_email: credentials.client_email,
+  },
 });
 
 export async function sendToDialogflowCX(message) {
   const sessionId = Math.random().toString(36).substring(7);
-  console.log('Sending message to Dialogflow CX with session ID:', sessionId);
-
-  // Construct the session path manually for CX
   const sessionPath = `projects/${projectId}/locations/${location}/agents/${agentId}/environments/${environment}/sessions/${sessionId}`;
 
   const request = {
@@ -30,8 +50,6 @@ export async function sendToDialogflowCX(message) {
     },
   };
 
-  console.log('Request:', JSON.stringify(request, null, 2));
-
   try {
     const [response] = await client.detectIntent(request);
     if (response.queryResult && response.queryResult.responseMessages) {
@@ -42,9 +60,7 @@ export async function sendToDialogflowCX(message) {
     }
     return "Sorry, I couldn't understand that. Could you try again?";
   } catch (error) {
-
-    console.error('Error communicating with Dialogflow CX:', JSON.stringify(error, null, 2));
+    console.error('Error communicating with Dialogflow CX:', error);
     return "Sorry, there was an error processing your request.";
-    
   }
 }
