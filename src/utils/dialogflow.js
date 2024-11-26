@@ -14,7 +14,8 @@ const credentials = {
   client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
 };
 
-import { grpc } from '@grpc/grpc-js';
+import pkg from '@grpc/grpc-js';
+const { grpc } = pkg;
 
 const client = new SessionsClient({
   credentials: credentials,
