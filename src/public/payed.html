@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thank You</title>
         <style>
+            /* General Styles */
             body {
                 font-family: 'Arial', sans-serif;
                 margin: 0;
@@ -23,6 +24,8 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 padding: 30px;
                 max-width: 400px;
+                width: 90%; /* Ajusta la anchura en pantallas pequeñas */
+                box-sizing: border-box;
             }
             h1 {
                 color: #2ecc71;
@@ -47,6 +50,39 @@
             .close-button:hover {
                 background-color: #2980b9;
             }
+
+            /* Responsive Styles */
+            @media (max-width: 768px) {
+                h1 {
+                    font-size: 20px;
+                }
+                p {
+                    font-size: 14px;
+                }
+                .container {
+                    padding: 20px;
+                }
+                .close-button {
+                    font-size: 14px;
+                    padding: 8px 16px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                h1 {
+                    font-size: 18px;
+                }
+                p {
+                    font-size: 13px;
+                }
+                .container {
+                    padding: 15px;
+                }
+                .close-button {
+                    font-size: 12px;
+                    padding: 6px 12px;
+                }
+            }
         </style>
     </head>
     <body>
@@ -57,6 +93,9 @@
         </div>
 
         <script>
+            document.getElementById('close-button').addEventListener('click', () => {
+                window.close();
+            });
         </script>
     </body>
 </html>

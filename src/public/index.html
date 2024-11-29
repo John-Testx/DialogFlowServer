@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduLicense</title>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -15,11 +16,22 @@
             background-attachment: fixed;
             display: flex;
             flex-direction: column;
-            align-items: center;    
+            align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow-x: hidden;
         }
-        
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
         h1 {
             color: #fff;
             font-size: 3rem;
@@ -34,15 +46,22 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap; /* Permite que las tarjetas se ajusten automáticamente */
+            justify-content: center; /* Centra las tarjetas horizontalmente */
+            gap: 20px; /* Espacio entre las tarjetas */
+            margin-top: 20px;
+        }
+
         .card {
-            background-color: rgba(255, 255, 255, 0.9);  /* Slight transparency */
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
             border: 1px solid #dcdcdc;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 25px;
-            max-width: 400px;
+            width: 300px;
             text-align: center;
-            margin-top: 20px;
             transition: transform 0.3s ease;
         }
 
@@ -77,43 +96,107 @@
         }
 
         .footer {
-            position: absolute;
-            bottom: 20px;
+            margin-top: 20px;
             color: #fff;
             font-size: 0.9rem;
+            text-align: center;
         }
 
         .footer a {
             color: #2ecc71;
             text-decoration: none;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                width: 120px;
+                margin: 10px 0;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            #checkout {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .footer {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-container {
+                flex-direction: column; /* Acomoda las tarjetas en una sola columna */
+                gap: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            .logo {
+                width: 100px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            #checkout {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to EduLicense</h1>
-    
-    <!-- Logo image, improved with shadow and rounded corners -->
-    <img src="images/edu_insight_icon.png" alt="EduLicense Logo" class="logo">
+    <div class="container">
+        <h1>Welcome to EduLicense</h1>
+        <img src="images/edu_insight_icon.png" alt="EduLicense Logo" class="logo">
 
-    <div class="card">
-        <h2>Licencia Premium</h2>
-        <p>Disfruta de los beneficios de una licencia educativa premium con acceso para hasta <strong>1200 usuarios</strong>. Ideal para instituciones que buscan maximizar el aprendizaje.</p>
-        <button id="checkout">Adquirir Licencia</button>
+        <!-- Cards Container -->
+        <div class="cards-container">
+            <div class="card">
+                <h2>Licencia Gratis</h2>
+                <p>Ideal para instituciones que recién comienzan o buscan centralizar procesos básicos.</p>
+                <p class="price">Gratis</p>
+                <p>Primeros 6 meses gratis, luego <strong>$3,000</strong> por estudiante.</p>
+                <button id="checkout">Adquirir Licencia</button>
+            </div>
+            <div class="card">
+                <h2>Licencia Premium</h2>
+                <p>Para instituciones que buscan una experiencia educativa avanzada con herramientas adicionales.</p>
+                <p class="price">$7,000</p>
+                <p>Por estudiante, incluye características premium para mejorar el aprendizaje.</p>
+                <button id="checkout">Adquirir Licencia</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Footer with a link or some additional information (optional) -->
     <div class="footer">
         <p>Powered by <a href="https://www.eduinsight.com">EduInsight</a></p>
     </div>
+
     <script>
-        const checkout = document.getElementById('checkout');
-        checkout.addEventListener('click', async () =>{
-            const response = await fetch('/payments/create-order',{
-                method: 'POST'
-            })
-            const data = await response.json()
-            window.location.href = data.links[1].href
-        })
+        const checkoutButtons = document.querySelectorAll('#checkout');
+        checkoutButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const response = await fetch('/payments/create-order', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                window.location.href = data.links[1].href;
+            });
+        });
     </script>
 </body>
 </html>
